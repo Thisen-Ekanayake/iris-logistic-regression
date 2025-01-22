@@ -30,7 +30,7 @@ pip install joblib pandas matplotlib seaborn scikit-learn
 
 #### 4. Run the script:
 ```
-python iris.py 
+python IrisLogisticRegression.py 
 ```
 #### 5. View the visualizations and outputs in the console or as plots.
 
