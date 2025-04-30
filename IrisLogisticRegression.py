@@ -149,7 +149,6 @@ def explain_prediction(input_sample, scaled_input, prediction, model, class_name
 
     return explanation
 
-
 sample = Xtest.iloc[0]
 scaled_sample = scaler.transform([sample])
 prediction = bestModel.predict(scaled_sample)[0]
