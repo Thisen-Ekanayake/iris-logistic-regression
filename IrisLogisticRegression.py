@@ -121,5 +121,40 @@ plt.show()
 # Print the feature importance with coefficients
 print(importance_df)
 
+def explain_prediction(input_sample, scaled_input, prediction, model, class_names):
+    """
+    Generate a natural language explanation for a single prediction made by a logistic regression model.
+    
+    Parameters:
+    - input_sample: Unscaled feature values (pd.Series)
+    - scaled_input: Scaled feature values (2D array)
+    - prediction: Predicted class label
+    - model: Trained logistic regression model
+    - class_names: List of class labels from model.classes_
+    
+    Returns:
+    - A string explanation of why the model predicted a certain class
+    """
+    class_index = list(class_names).index(prediction)
+    coeffs = model.coef_[class_index]
+
+    explanation = f"🔍 The model predicted **'{prediction}'** for this flower because:\n"
+
+    for i, feature in enumerate(input_sample.index):
+        original_val = input_sample[i]
+        scaled_val = scaled_input[0][i]
+        contribution = coeffs[i] * scaled_val
+        direction = "increased" if contribution > 0 else "decreased"
+        explanation += f"• {feature} = {original_val:.2f} → this {direction} the chance of '{prediction}' (weight: {coeffs[i]:.2f})\n"
+
+    return explanation
+
+sample = Xtest.iloc[0]
+scaled_sample = scaler.transform([sample])
+prediction = bestModel.predict(scaled_sample)[0]
+
+explanation = explain_prediction(sample, scaled_sample, prediction, bestModel, bestModel.classes_)
+print(explanation)
+
 # Saving the trained model to a file using joblib
 joblib.dump(bestModel, "tuned_iris_model.pkl")  # Save the best model to a file
